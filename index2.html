@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Introduction</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: white;
+            color: black;
+            transition: background-color 2s ease-in-out, color 2s ease-in-out;
+            position: relative;
+        }
+        .content {
+            text-align: center;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+        }
+        .content.show {
+            opacity: 1;
+        }
+        .button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #444;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .button.show {
+            opacity: 1;
+        }
+        .typing {
+            display: inline-block;
+            border-right: 3px solid black;
+            white-space: nowrap;
+            overflow: hidden;
+            animation: blink 0.8s step-end infinite;
+        }
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+        .dimmed {
+            background-color: #444;
+            color: white;
+        }
+        .dark-mode {
+            background-color: black;
+            color: white;
+            text-shadow: 0 0 10px white;
+        }
+        .riptide {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            transform: scale(0);
+            opacity: 0.8;
+            transition: transform 2s ease-out;
+        }
+        .riptide.expand {
+            transform: scale(50);
+            opacity: 1;
+        }
+        .fade-up {
+            opacity: 0;
+            transform: translateY(20px);
+            color: black;
+            animation: fadeUp 3s ease-in-out forwards;
+        }
+        .fade-up.black-text {
+            color: black;
+        }
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(-50px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="content" id="dialogueBox">
+        <h1 id="dialogue"><span class="typing"></span></h1>
+        <button id="responseButton" class="button">Hello!</button>
+    </div>
+    <div class="riptide" id="riptide"></div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            setTimeout(() => {
+                document.getElementById("dialogueBox").classList.add("show");
+                typeText(0);
+            }, 2000);
+        });
+        
+        const dialogue = [
+            { text: "Howdy!", button: "Hello!" },
+            { text: "How did you get here?", button: "I don't know.." },
+            { text: "You don't know?", button: "Mhm" },
+            { text: "Hmmm..", button: "Hey" },
+            { text: "What? You want to say something?", button: "Do you know the page for Work Immersion?" },
+            { text: "Work Immersion? Website?", button: "Yes!" },
+            { text: "Ohhhh you're a visitor", button: "Visitor?" },
+            { text: "Oh boyy a visitor!!", button: "...", action: "dim" },
+            { text: "It's been a while but anyways", button: "Oh?", action: "dark" },
+            { text: "Shall we proceed?", button: "Sure?", action: "riptide" }
+        ];
+        
+        let index = 0;
+        const dialogueText = document.querySelector(".typing");
+        const responseButton = document.getElementById("responseButton");
+        const riptideEffect = document.getElementById("riptide");
+        
+        function typeText(idx) {
+            let text = dialogue[idx].text;
+            let i = 0;
+            dialogueText.textContent = "";
+            
+            function typingEffect() {
+                if (i < text.length) {
+                    dialogueText.textContent += text.charAt(i);
+                    i++;
+                    let delay = Math.random() * 150 + 50;
+                    setTimeout(typingEffect, delay);
+                } else {
+                    setTimeout(() => {
+                        responseButton.textContent = dialogue[idx].button;
+                        responseButton.classList.add("show");
+                    }, 500);
+                }
+            }
+            typingEffect();
+        }
+        
+        responseButton.addEventListener("click", (event) => {
+            if (dialogue[index].action === "dim") {
+                document.body.classList.add("dimmed");
+            } else if (dialogue[index].action === "dark") {
+                document.body.classList.add("dark-mode");
+            } else if (dialogue[index].action === "riptide") {
+                const x = event.clientX;
+                const y = event.clientY;
+                riptideEffect.style.left = `${x - 50}px`;
+                riptideEffect.style.top = `${y - 50}px`;
+                riptideEffect.classList.add("expand");
+                setTimeout(() => {
+                    document.body.style.backgroundColor = "white";
+                    document.body.style.color = "black";
+                    setTimeout(() => {
+                        dialogueText.textContent = "Great.";
+                        dialogueText.classList.add("fade-up", "black-text");
+                        setTimeout(() => {
+                            window.location.href = "index2.html";
+                        }, 3000);
+                    }, 2000);
+                }, 2000);
+                return;
+            }
+            index++;
+            responseButton.classList.remove("show");
+            if (index < dialogue.length) {
+                setTimeout(() => typeText(index), 500);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultra-Realistic Camera with Flash Effect</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #121212;
+            margin: 0;
+            overflow: hidden;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Camera Body */
+        .camera {
+            width: 320px;
+            height: 200px;
+            background: linear-gradient(180deg, #555, #222);
+            border-radius: 20px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            border: 10px solid #181818;
+        }
+
+        /* Textured Grip */
+        .grip {
+            position: absolute;
+            left: 10px;
+            width: 55px;
+            height: 160px;
+            background: repeating-linear-gradient(90deg, #222, #444 6px);
+            border-radius: 15px;
+        }
+
+        /* Camera Lens */
+        .lens {
+            width: 110px;
+            height: 110px;
+            background: radial-gradient(circle, #000, #444);
+            border: 16px solid #aaa;
+            border-radius: 50%;
+            box-shadow: inset 0 0 35px #111, 0 0 30px #888;
+            position: relative;
+        }
+
+        /* Flash Effect */
+        .flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            opacity: 0;
+            transition: opacity 2s ease-out;
+            pointer-events: none;
+        }
+
+        /* Take Photo Button */
+        .camera-button {
+            margin-top: 20px;
+            padding: 20px 40px;
+            font-size: 26px;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(180deg, #008cff, #004b99);
+            color: white;
+            border-radius: 16px;
+            transition: 0.3s;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .camera-button:hover {
+            background-color: #003f7f;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Camera Shape -->
+    <div class="camera">
+        <div class="grip"></div>
+        <div class="lens"></div>
+    </div>
+
+    <!-- Take Photo Button -->
+    <button class="camera-button" onclick="flashScreen()">📸 Take Photo</button>
+
+    <!-- Flash Effect -->
+    <div class="flash" id="flashEffect"></div>
+
+    <script>
+        function flashScreen() {
+            let flash = document.getElementById('flashEffect');
+            flash.style.transition = 'none'; // Remove transition for instant effect
+            flash.style.opacity = '1';
+            
+            setTimeout(() => {
+                window.location.href = 'index1.html'; // Redirect to another file
+            }, 1000); // Open new file after 1 second (middle of the flash)
+            
+            setTimeout(() => {
+                flash.style.transition = 'opacity 2s ease-out'; // Reapply smooth fade
+                flash.style.opacity = '0';
+            }, 2000); // Keep flash at full brightness for 2 seconds
+        }
+    </script>
+
+</body>
+</html>
